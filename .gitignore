@@ -100,3 +100,8 @@ cython_debug/
 # IDE
 .vscode
 .idea
+
+# App Specific
+output/
+*_zh.srt
+*_zh.txt
