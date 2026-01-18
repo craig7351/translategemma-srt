@@ -48,7 +48,18 @@ def translate_srt(file_path, source_lang="English", target_lang="Traditional Chi
     new_subs = []
     current_progress = 0
     
-    for i in tqdm(range(0, len(subs), BATCH_SIZE), unit="batch"):
+    # Determine if we should use tqdm (disable in GUI or if no console)
+    use_tqdm = True
+    if log_callback is not None:
+        use_tqdm = False
+    if sys.stderr is None:
+        use_tqdm = False
+
+    iterator = range(0, len(subs), BATCH_SIZE)
+    if use_tqdm:
+         iterator = tqdm(iterator, unit="batch")
+
+    for i in iterator:
         batch = subs[i : i + BATCH_SIZE]
         
         # specific fix: skip completely empty subs to avoid misalignment (or handle carefully)
@@ -147,8 +158,19 @@ def translate_plain_text(file_path, source_lang="English", target_lang="Traditio
     total_items = len(lines_to_process)
     current_progress = 0
     
+    # Determine if we should use tqdm (disable in GUI or if no console)
+    use_tqdm = True
+    if log_callback is not None:
+        use_tqdm = False
+    if sys.stderr is None:
+        use_tqdm = False
+
+    iterator = range(0, total_items, BATCH_SIZE)
+    if use_tqdm:
+        iterator = tqdm(iterator, unit="batch")
+
     # Process in batches
-    for i in tqdm(range(0, total_items, BATCH_SIZE), unit="batch"):
+    for i in iterator:
         batch_tuples = lines_to_process[i : i + BATCH_SIZE]
         batch_indices = [t[0] for t in batch_tuples]
         batch_texts = [t[1] for t in batch_tuples]
