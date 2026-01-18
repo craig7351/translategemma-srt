@@ -89,8 +89,14 @@ def translate_srt(file_path, source_lang="English", target_lang="Traditional Chi
             progress_callback(current_progress, len(subs))
 
     # Generate output filename
-    base_name, ext = os.path.splitext(file_path)
-    output_path = f"{base_name}_zh{ext}"
+    if output_path is None:
+        base_name, ext = os.path.splitext(file_path)
+        output_path = f"{base_name}_zh{ext}"
+    
+    # Ensure output directory exists if output_path is provided
+    output_dir = os.path.dirname(output_path)
+    if output_dir and not os.path.exists(output_dir):
+        os.makedirs(output_dir, exist_ok=True)
 
     log(f"Saving translated SRT to {output_path}...")
     with open(output_path, "w", encoding="utf-8") as f:

@@ -199,6 +199,7 @@ class MainWindow(QMainWindow):
         
         self.prompt_combo = QComboBox()
         self.prompt_combo.addItems(list(self.prompts.keys()))
+        self.prompt_combo.setCurrentText("電影字幕 (Subtitle)")
         self.prompt_combo.currentIndexChanged.connect(self.update_prompt_text)
         
         self.app_instruction = QTextEdit()
@@ -296,11 +297,15 @@ class MainWindow(QMainWindow):
     def browse_folder(self):
         folder = QFileDialog.getExistingDirectory(self, "選擇資料夾")
         if folder:
+            # Normalize path separators to /
+            folder = folder.replace(os.path.sep, "/")
             self.path_input.setText(folder)
 
     def browse_output_folder(self):
         folder = QFileDialog.getExistingDirectory(self, "選擇輸出資料夾")
         if folder:
+            # Normalize path separators to /
+            folder = folder.replace(os.path.sep, "/")
             self.output_path_input.setText(folder)
             
     def on_input_path_changed(self, text):
@@ -312,15 +317,21 @@ class MainWindow(QMainWindow):
             # User said: "改左邊選來源 右邊選output目錄, 預設會是跟input同一層的目錄名output" -> Same level as input directory.
             # E.g. Input: F:/.../input -> Output: F:/.../output
             
-            parent_dir = os.path.dirname(os.path.abspath(text))
-            # base_name = os.path.basename(os.path.abspath(text)) # Not used for this logic
+            # Correct Logic:
+            # If Input is "F:/0_CODE/google-open-translate/input" (a folder named 'input')
+            # We want Output to be "F:/0_CODE/google-open-translate/output" (a sibling folder named 'output')
             
-            # If the folder name is 'input', we might want 'output' at same level
-            # If folder name is 'my_folder', maybe 'my_folder_output'?
-            # User specifically said "same level directory name 'output'".
-            # So if input is F:/A/B, output should be F:/A/output.
+            # If Input is "F:/0_CODE/google-open-translate/my_project"
+            # We want Output to be "F:/0_CODE/google-open-translate/my_project_output" OR "F:/0_CODE/google-open-translate/output" ?
+            # User requirement: "預設會是跟input同一層的目錄名output" (Default should be a directory named "output" at the same level as "input")
             
+            abs_input = os.path.abspath(text)
+            parent_dir = os.path.dirname(abs_input)
+            
+            # So if input is .../A/B, output is .../A/output
             suggested_output = os.path.join(parent_dir, "output")
+            # Normalize to /
+            suggested_output = suggested_output.replace("\\", "/")
             self.output_path_input.setText(suggested_output)
 
     def log(self, message):
