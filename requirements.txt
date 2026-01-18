@@ -1,0 +1,5 @@
+ollama
+srt
+tqdm
+PyQt6
+opencc-python-reimplemented
