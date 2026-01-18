@@ -40,7 +40,7 @@
 
 ```bash
 # 推薦 (速度與品質平衡)
-ollama pull translategemma:27b
+ollama pull translategemma:12b
 ollama pull translategemma:4b
 ```
 
@@ -61,9 +61,16 @@ pip install -r requirements.txt
 ## 💻 使用方法 (Usage)
 
 ### 啟動圖形介面 (GUI)
-雙擊目錄下的 `start.bat` 即可啟動程式。
 
-### 操作步驟
+- **Windows**:
+  雙擊目錄下的 `start.bat` 即可啟動程式。
+
+- **macOS / Linux**:
+  請打開終端機，執行以下指令：
+  ```bash
+  source venv/bin/activate
+  python gui.py
+  ```
 1.  **Input Source**: 點擊「瀏覽輸入」選擇包含 SRT 或 TXT 檔案的資料夾。
 2.  **Output Directory**: 程式會自動建議輸出路徑 (通常是同層的 `output` 資料夾)，您也可以點擊「瀏覽輸出」手動更改。
 3.  **Translation Settings**:
